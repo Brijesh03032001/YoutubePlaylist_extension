@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart YouTube Playlist Planner</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <!-- Header -->
+    <div class="popup-header">
+      <div class="popup-logo">📚</div>
+      <div class="popup-header-text">
+        <h1 class="popup-title">Smart YouTube Playlist Planner</h1>
+        <p class="popup-subtitle">Finish what you start</p>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="popup-content">
+      <!-- Not on playlist page -->
+      <div id="not-playlist-state" class="popup-state hidden">
+        <div class="empty-state">
+          <div class="empty-icon">🎬</div>
+          <h3 class="empty-title">Open a YouTube Playlist</h3>
+          <p class="empty-text">Navigate to any YouTube playlist to start planning your watch schedule.</p>
+        </div>
+      </div>
+
+      <!-- Playlist summary -->
+      <div id="playlist-state" class="popup-state hidden">
+        <!-- Stats -->
+        <div class="stats-section">
+          <div class="stat-item">
+            <div class="stat-icon">📊</div>
+            <div class="stat-content">
+              <div class="stat-label">Tracked Playlists</div>
+              <div class="stat-value" id="total-playlists">0</div>
+            </div>
+          </div>
+          
+          <div class="stat-item">
+            <div class="stat-icon">✅</div>
+            <div class="stat-content">
+              <div class="stat-label">Videos Watched</div>
+              <div class="stat-value" id="total-watched">0</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent playlists -->
+        <div class="section">
+          <h3 class="section-title">Recent Playlists</h3>
+          <div id="recent-playlists" class="playlist-list">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading state -->
+      <div id="loading-state" class="popup-state hidden">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Loading...</p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="popup-footer">
+      <button id="clear-cache-btn" class="footer-btn">
+        <span>🗑️</span> Clear Cache
+      </button>
+      <button id="settings-btn" class="footer-btn">
+        <span>⚙️</span> Settings
+      </button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

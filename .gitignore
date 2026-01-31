@@ -1,0 +1,24 @@
+# Environment
+.env
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Build artifacts
+dist/
+build/
+
+# Dependencies (if using npm)
+node_modules/
+package-lock.json
+yarn.lock

@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Reset/Base Styles for Extension Isolation */
+#ytpp-root {
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Ensure our styles don't leak out, and page styles don't leak in too much */
+#ytpp-root * {
+  box-sizing: border-box;
+}
+
+/* Scrollbar styling for the planner */
+.ytpp-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.ytpp-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.ytpp-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 3px;
+}
+.dark .ytpp-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #475569;
+}
