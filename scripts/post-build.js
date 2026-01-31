@@ -17,9 +17,12 @@ manifest.background.service_worker = 'assets/background.js';
 manifest.content_scripts = manifest.content_scripts.map(script => ({
   ...script,
   js: ['assets/content.js'],
-  css: ['assets/content.css']
+  css: ['assets/index.css']
 }));
 
+// Vite build places index.html at root of dist usually for MPA, but let's check.
+// Actually for 'popup' entry in vite config, it might be named differently.
+// Let's rely on standard vite behavior: usually assets/index.css is the main css.
 manifest.action.default_popup = 'src/popup/index.html';
 
 // Write to dist
