@@ -1,7 +1,8 @@
+import CONFIG from '../constants/config';
+
 /**
  * Storage utility functions for Chrome storage API
  */
-
 const StorageUtils = {
   /**
    * Save data to Chrome storage
@@ -186,7 +187,4 @@ const StorageUtils = {
   }
 };
 
-// Export for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = StorageUtils;
-}
+export default StorageUtils;

@@ -1,7 +1,10 @@
+import DOMUtils from '../utils/domUtils';
+import TimeUtils from '../utils/timeUtils';
+import CONFIG from '../constants/config';
+
 /**
  * Playlist Parser - Extracts playlist data from YouTube DOM
  */
-
 const PlaylistParser = {
   /**
    * Extract playlist ID from URL
@@ -402,7 +405,4 @@ const PlaylistParser = {
   }
 };
 
-// Export for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = PlaylistParser;
-}
+export default PlaylistParser;

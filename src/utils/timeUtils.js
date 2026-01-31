@@ -182,6 +182,4 @@ const TimeUtils = {
 };
 
 // Export for use in other modules
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = TimeUtils;
-}
+export default TimeUtils;
