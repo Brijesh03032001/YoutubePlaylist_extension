@@ -16,14 +16,24 @@ manifest.background.service_worker = 'assets/background.js';
 // Update content scripts
 manifest.content_scripts = manifest.content_scripts.map(script => ({
   ...script,
-  js: ['assets/content.js'],
+  js: ['content-loader.js'],
   css: ['assets/index.css']
 }));
 
-// Vite build places index.html at root of dist usually for MPA, but let's check.
-// Actually for 'popup' entry in vite config, it might be named differently.
-// Let's rely on standard vite behavior: usually assets/index.css is the main css.
+// Add content.js to web_accessible_resources so the loader can import it
+manifest.web_accessible_resources = manifest.web_accessible_resources || [];
+manifest.web_accessible_resources.push({
+  resources: ['assets/content.js'],
+  matches: ['<all_urls>']
+});
+
 manifest.action.default_popup = 'src/popup/index.html';
+
+// Copy content-loader.js to dist
+fs.copyFileSync(
+  path.resolve(rootDir, 'src/content/content-loader.js'), 
+  path.resolve(distDir, 'content-loader.js')
+);
 
 // Write to dist
 fs.writeFileSync(distManifestPath, JSON.stringify(manifest, null, 2));
