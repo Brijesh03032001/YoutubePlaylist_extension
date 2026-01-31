@@ -23,7 +23,7 @@ manifest.content_scripts = manifest.content_scripts.map(script => ({
 // Add content.js to web_accessible_resources so the loader can import it
 manifest.web_accessible_resources = manifest.web_accessible_resources || [];
 manifest.web_accessible_resources.push({
-  resources: ['assets/content.js'],
+  resources: ['assets/*', 'content-loader.js'],
   matches: ['<all_urls>']
 });
 
