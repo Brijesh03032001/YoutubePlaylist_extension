@@ -34,12 +34,39 @@ const CONFIG = {
   
   // YouTube selectors (robust against DOM changes)
   SELECTORS: {
-    PLAYLIST_TITLE: 'h1.ytd-playlist-header-renderer, yt-formatted-string.ytd-playlist-header-renderer',
-    PLAYLIST_STATS: '#stats .ytd-playlist-header-renderer, #stats',
-    VIDEO_ITEMS: 'ytd-playlist-video-renderer, ytd-playlist-video-list-renderer ytd-playlist-video-renderer',
-    VIDEO_TITLE: '#video-title, a#video-title',
-    VIDEO_DURATION: 'ytd-thumbnail-overlay-time-status-renderer, #overlays ytd-thumbnail-overlay-time-status-renderer',
-    WATCHED_BADGE: '.ytd-thumbnail-overlay-resume-playback-renderer, ytd-thumbnail-overlay-resume-playback-renderer'
+    PLAYLIST_TITLE: [
+      'h1.style-scope.ytd-playlist-header-renderer',
+      'yt-formatted-string[class*="title"]',
+      'h1 yt-formatted-string',
+      '#text.ytd-playlist-header-renderer',
+      'ytd-playlist-header-renderer h1',
+      'h1'
+    ].join(', '),
+    PLAYLIST_STATS: [
+      '#stats .ytd-playlist-header-renderer',
+      '#stats',
+      'ytd-playlist-byline-renderer',
+      '.metadata-stats'
+    ].join(', '),
+    VIDEO_ITEMS: [
+      'ytd-playlist-video-renderer',
+      'ytd-playlist-video-list-renderer ytd-playlist-video-renderer'
+    ].join(', '),
+    VIDEO_TITLE: [
+      '#video-title',
+      'a#video-title',
+      'h3 a'
+    ].join(', '),
+    VIDEO_DURATION: [
+      'ytd-thumbnail-overlay-time-status-renderer',
+      '#overlays ytd-thumbnail-overlay-time-status-renderer',
+      'span.ytd-thumbnail-overlay-time-status-renderer'
+    ].join(', '),
+    WATCHED_BADGE: [
+      '.ytd-thumbnail-overlay-resume-playback-renderer',
+      'ytd-thumbnail-overlay-resume-playback-renderer',
+      '#progress'
+    ].join(', ')
   },
   
   // Debug mode

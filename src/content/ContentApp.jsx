@@ -71,8 +71,10 @@ const ContentApp = () => {
 
   if (mode === 'hidden') return null;
 
+  console.log('[ContentApp] Rendering with mode:', mode, 'data:', playlistData, 'loading:', loading, 'error:', error);
+
   return (
-    <div className="font-sans antialiased text-slate-800">
+    <div className="ytpp-root-container">
       {mode === 'lite' && playlistData && (
         <LiteCard 
           title={playlistData.title} 

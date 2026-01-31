@@ -1,47 +1,80 @@
-import React, { useState, useEffect } from 'react';
-import { BookOpen, X } from 'lucide-react';
+import React, { useState } from 'react';
+import { PlayCircle, X, ExternalLink, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const LiteCard = ({ title, url, onClose }) => {
   const [isVisible, setIsVisible] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleClose = () => {
     setIsVisible(false);
     // Wait for exit animation
-    setTimeout(onClose, 400);
+    setTimeout(onClose, 300);
   };
 
   return (
     <AnimatePresence>
       {isVisible && (
         <motion.div 
-          initial={{ x: 50, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: 50, opacity: 0 }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="fixed top-[70px] right-6 z-[9999] pointer-events-auto"
+          initial={{ x: 100, opacity: 0, scale: 0.9 }}
+          animate={{ x: 0, opacity: 1, scale: 1 }}
+          exit={{ x: 100, opacity: 0, scale: 0.9 }}
+          transition={{ type: "spring", stiffness: 260, damping: 25 }}
+          className="fixed top-[80px] right-6 z-[10000] pointer-events-auto"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
-          <div className="flex items-center gap-3 px-4 py-2.5 bg-slate-900/90 backdrop-blur-xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)] rounded-full hover:shadow-indigo-500/20 hover:border-indigo-500/30 transition-all group">
-            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/30 text-white shrink-0">
-              <BookOpen size={14} fill="currentColor" className="opacity-90" />
-            </div>
+          <div className="relative group">
+            {/* Glow Effect */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-600 rounded-2xl opacity-0 group-hover:opacity-30 blur-lg transition-opacity duration-500"></div>
             
-            <a 
-              href={url}
-              className="max-w-[200px] text-sm font-semibold text-slate-200 truncate hover:text-white transition-colors no-underline pr-2"
-              title={title}
-            >
-              {title}
-            </a>
+            {/* Main Card */}
+            <div className="relative flex items-center gap-3 px-5 py-3.5 bg-gradient-to-br from-black via-slate-950 to-slate-900 backdrop-blur-2xl border border-white/10 shadow-2xl shadow-black/40 rounded-2xl hover:border-yellow-500/40 transition-all duration-300 overflow-hidden">
+              
+              {/* Animated Background */}
+              <div className="absolute inset-0 bg-gradient-to-r from-yellow-500/5 via-yellow-400/5 to-yellow-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-            <div className="w-px h-4 bg-white/10 mx-1"></div>
+              {/* Icon */}
+              <div className="relative shrink-0">
+                <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-500 to-yellow-600 shadow-lg shadow-yellow-500/40 text-black">
+                  <PlayCircle size={18} fill="currentColor" className="opacity-90" strokeWidth={0} />
+                </div>
+                <motion.div 
+                  className="absolute -top-1 -right-1 w-3 h-3"
+                  animate={{ scale: isHovered ? [1, 1.2, 1] : 1 }}
+                  transition={{ duration: 0.5, repeat: isHovered ? Infinity : 0 }}
+                >
+                  <Sparkles size={12} className="text-yellow-400" fill="currentColor" />
+                </motion.div>
+              </div>
+              
+              {/* Content */}
+              <div className="relative flex-1 min-w-0">
+                <div className="text-[10px] font-bold text-yellow-400 uppercase tracking-wider mb-0.5">
+                  Playlist Found
+                </div>
+                <a 
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 group/link max-w-[240px]"
+                  title={title}
+                >
+                  <span className="text-sm font-bold text-white truncate group-hover/link:text-yellow-300 transition-colors">
+                    {title}
+                  </span>
+                  <ExternalLink size={12} className="text-slate-500 group-hover/link:text-yellow-400 transition-colors shrink-0" />
+                </a>
+              </div>
 
-            <button 
-              onClick={handleClose}
-              className="p-1.5 rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
-            >
-              <X size={14} />
-            </button>
+              {/* Close Button */}
+              <button 
+                onClick={handleClose}
+                className="relative shrink-0 p-2 rounded-xl hover:bg-white/10 text-slate-400 hover:text-white transition-all hover:rotate-90 duration-300"
+              >
+                <X size={16} />
+              </button>
+            </div>
           </div>
         </motion.div>
       )}

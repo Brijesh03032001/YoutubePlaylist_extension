@@ -2,49 +2,112 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Reset/Base Styles for Extension Isolation */
+/* Extension Isolation */
 #ytpp-root {
-  z-index: 9999;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 0;
+  all: initial;
+  z-index: 10000;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  pointer-events: none !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Ensure our styles don't leak out, and page styles don't leak in too much */
-#ytpp-root * {
+/* Container that allows pointer events on children */
+.ytpp-root-container {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  pointer-events: none !important;
+  z-index: 10000 !important;
+}
+
+.ytpp-root-container > * {
+  pointer-events: auto !important;
+}
+
+/* Ensure our components don't inherit YouTube's styles */
+#ytpp-root *, .ytpp-root-container * {
   box-sizing: border-box;
+  font-family: inherit;
 }
 
-/* Scrollbar styling for the planner */
-.ytpp-scrollbar::-webkit-scrollbar {
+/* Restore essential interactive elements */
+#ytpp-root button {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#ytpp-root a {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+#ytpp-root input {
+  display: block;
+}
+
+/* Custom Scrollbar */
+.ytpp-scrollbar::-webkit-scrollbar,
+#ytpp-root ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
-.ytpp-scrollbar::-webkit-scrollbar-track {
+
+.ytpp-scrollbar::-webkit-scrollbar-track,
+#ytpp-root ::-webkit-scrollbar-track {
   background: transparent;
 }
-.ytpp-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.2);
+
+.ytpp-scrollbar::-webkit-scrollbar-thumb,
+#ytpp-root ::-webkit-scrollbar-thumb {
+  background-color: rgba(99, 102, 241, 0.3);
   border-radius: 3px;
 }
-.ytpp-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(255, 255, 255, 0.4);
+
+.ytpp-scrollbar::-webkit-scrollbar-thumb:hover,
+#ytpp-root ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(99, 102, 241, 0.5);
 }
 
-/* Global scrollbar for popup */
+/* Popup Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(148, 163, 184, 0.2);
+  background-color: rgba(99, 102, 241, 0.3);
   border-radius: 3px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(148, 163, 184, 0.4);
+  background-color: rgba(99, 102, 241, 0.5);
+}
+
+/* Animation for gradients */
+@keyframes gradient-x {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-x {
+  background-size: 200% 200%;
+  animation: gradient-x 3s ease infinite;
 }

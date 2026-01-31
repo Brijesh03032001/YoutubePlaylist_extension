@@ -6,24 +6,27 @@ import '../styles/index.css';
 const MOUNT_POINT_ID = 'ytpp-root';
 
 function mount() {
+  console.log('[YTPP Content] Mounting React app...');
+  
   const existingRoot = document.getElementById(MOUNT_POINT_ID);
-  if (existingRoot) return;
+  if (existingRoot) {
+    console.log('[YTPP Content] Root already exists, skipping mount');
+    return;
+  }
 
   const root = document.createElement('div');
   root.id = MOUNT_POINT_ID;
   document.body.appendChild(root);
-
-  // shadow DOM is often better for isolation, but for now standard DOM with scoped styles/Tailwind prefix is easier to debug
-  // We'll use our css file which is scoped effectively by the build process or manual prefixing if needed.
-  // Actually, our tailwind config is global. To avoid conflicts, Shadow DOM is best.
-  // But injecting styles into Shadow DOM with Vite/Tailwind can be tricky. 
-  // Let's stick to normal DOM for now, but use a high z-index wrapper.
+  
+  console.log('[YTPP Content] Root element created and appended to body');
 
   ReactDOM.createRoot(root).render(
     <React.StrictMode>
       <ContentApp />
     </React.StrictMode>
   );
+  
+  console.log('[YTPP Content] React app rendered');
 }
 
 // Initial mount

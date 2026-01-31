@@ -54,30 +54,40 @@ const PlaylistParser = {
 
       console.log('[Parser] Waiting for playlist title...');
       
-      // Wait for playlist elements to load
-      const titleElement = await DOMUtils.waitForElement(
+      // Wait for playlist elements to load with longer timeout
+      let titleElement = await DOMUtils.waitForElement(
         CONFIG.SELECTORS.PLAYLIST_TITLE, 
-        10000
+        15000
       );
 
+      // If not found, try searching in the entire page
       if (!titleElement) {
-        // Check again if we're still on a playlist page
-        if (!this.isPlaylistPage()) {
-          console.log('[Parser] Page changed, no longer on playlist');
-          return null;
-        }
+        console.log('[Parser] Title not found with primary selectors, trying alternatives...');
         
-        console.error('[Parser] Playlist title not found after 10s');
-        console.log('[Parser] Trying alternative selector...');
-        
-        // Try alternative selector
-        const altTitle = document.querySelector('h1') || document.querySelector('.title');
-        if (altTitle) {
-          console.log('[Parser] Found title using alternative selector');
-        } else {
-          console.error('[Parser] No title element found at all');
-          return null;
+        // Try to find any h1 that looks like a playlist title
+        const allH1s = document.querySelectorAll('h1');
+        for (const h1 of allH1s) {
+          const text = h1.textContent?.trim();
+          if (text && text.length > 0 && text.length < 200) {
+            titleElement = h1;
+            console.log('[Parser] Found title using fallback h1:', text);
+            break;
+          }
         }
+      }
+
+      // Last resort - try to find any visible text that might be the title
+      if (!titleElement) {
+        console.error('[Parser] Could not find playlist title element');
+        // Use URL as fallback title
+        const playlistId = this.getPlaylistId();
+        return {
+          id: playlistId,
+          title: `Playlist ${playlistId}`,
+          videoCount: 0,
+          url: window.location.href.split('&')[0],
+          extractedAt: Date.now()
+        };
       }
 
       const playlistId = this.getPlaylistId();
@@ -242,7 +252,16 @@ const PlaylistParser = {
       );
       const durationText = durationElement?.getAttribute('aria-label') || 
                           DOMUtils.getTextContent(durationElement);
-      const durationSeconds = TimeUtils.parseYouTubeDuration(durationText);
+      
+      let durationSeconds = 0;
+      if (TimeUtils && typeof TimeUtils.parseYouTubeDuration === 'function') {
+        durationSeconds = TimeUtils.parseYouTubeDuration(durationText);
+      } else if (TimeUtils && TimeUtils.default && typeof TimeUtils.default.parseYouTubeDuration === 'function') {
+        // Handle weird CJS/ESM interop if typical default import issue
+        durationSeconds = TimeUtils.default.parseYouTubeDuration(durationText);
+      } else {
+        console.error('[Parser] TimeUtils.parseYouTubeDuration is not a function', TimeUtils);
+      }
 
       // Check if watched (YouTube marks watched videos)
       const watchedElement = DOMUtils.safeQuery(
