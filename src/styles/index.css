@@ -20,14 +20,31 @@
 /* Scrollbar styling for the planner */
 .ytpp-scrollbar::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 .ytpp-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
 .ytpp-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #cbd5e1;
+  background-color: rgba(255, 255, 255, 0.2);
   border-radius: 3px;
 }
-.dark .ytpp-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #475569;
+.ytpp-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Global scrollbar for popup */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(148, 163, 184, 0.2);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(148, 163, 184, 0.4);
 }
