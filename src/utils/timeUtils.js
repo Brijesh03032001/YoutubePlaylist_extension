@@ -4,8 +4,8 @@
 
 const TimeUtils = {
   /**
-   * Parse YouTube duration format (MM:SS or HH:MM:SS) to seconds
-   * @param {string} duration - Duration string from YouTube
+   * Parse YouTube duration format (MM:SS or HH:MM:SS or H:MM:SS) to seconds
+   * @param {string} duration - Duration string from YouTube (e.g., "10:30" or "1:23:45")
    * @returns {number} Total seconds
    */
   parseYouTubeDuration(duration) {
@@ -13,28 +13,41 @@ const TimeUtils = {
       return 0;
     }
 
-    // Remove any whitespace
-    duration = duration.trim();
+    // Remove any whitespace and commas
+    duration = duration.trim().replace(/,/g, '');
+    
+    // Only process if it contains colons (timestamp format)
+    if (!duration.includes(':')) {
+      return 0;
+    }
 
     // Handle YouTube Shorts (typically show as "0:XX" or just ":XX")
     if (duration.startsWith(':')) {
       duration = '0' + duration;
     }
 
-    // Split by colon
-    const parts = duration.split(':').map(part => parseInt(part, 10) || 0);
+    // Split by colon and parse each part
+    const parts = duration.split(':').map(part => {
+      const num = parseInt(part.trim(), 10);
+      return isNaN(num) ? 0 : num;
+    });
 
     let seconds = 0;
     
     if (parts.length === 3) {
-      // HH:MM:SS
+      // HH:MM:SS or H:MM:SS
       seconds = parts[0] * 3600 + parts[1] * 60 + parts[2];
     } else if (parts.length === 2) {
-      // MM:SS
+      // MM:SS or M:SS
       seconds = parts[0] * 60 + parts[1];
     } else if (parts.length === 1) {
-      // Just seconds
+      // Just seconds (rare)
       seconds = parts[0];
+    }
+    
+    // Sanity check: if result is unreasonably large (>24 hours), something went wrong
+    if (seconds > 86400) {
+      console.warn('[TimeUtils] Parsed unusually long duration:', duration, '=>', seconds, 'seconds');
     }
 
     return seconds;
