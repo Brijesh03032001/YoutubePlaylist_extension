@@ -105,7 +105,7 @@ const PlannerCard = ({ data, loading, error, onClose }) => {
     <motion.div 
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      className="fixed top-20 right-6 w-[420px] z-[10000] bg-gradient-to-br from-black via-slate-950 to-slate-900 backdrop-blur-2xl rounded-3xl p-10 flex flex-col items-center justify-center min-h-[340px] border border-white/10 shadow-2xl shadow-yellow-900/20"
+      className="fixed top-20 right-6 w-[480px] z-[10000] bg-gradient-to-br from-black via-slate-950 to-slate-900 backdrop-blur-2xl rounded-3xl p-10 flex flex-col items-center justify-center min-h-[340px] border border-white/10 shadow-2xl shadow-yellow-900/20"
     >
       <div className="relative mb-4">
         <div className="w-14 h-14 border-4 border-yellow-500/20 border-t-yellow-500 rounded-full animate-spin"></div>
@@ -122,7 +122,7 @@ const PlannerCard = ({ data, loading, error, onClose }) => {
     <motion.div 
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
-      className="fixed top-20 right-6 w-[420px] z-[10000] bg-gradient-to-br from-black to-red-950/20 backdrop-blur-2xl rounded-3xl p-6 border border-red-500/30 shadow-2xl"
+      className="fixed top-20 right-6 w-[480px] z-[10000] bg-gradient-to-br from-black to-red-950/20 backdrop-blur-2xl rounded-3xl p-6 border border-red-500/30 shadow-2xl"
     >
       <div className="flex justify-between items-start mb-3">
         <div className="flex items-center gap-2">
@@ -152,7 +152,7 @@ const PlannerCard = ({ data, loading, error, onClose }) => {
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ type: "spring", duration: 0.5 }}
-      className="fixed top-[80px] right-6 w-[420px] z-[10000] font-sans"
+      className="fixed top-[80px] right-6 w-[480px] z-[10000] font-sans"
     >
       <div className="bg-gradient-to-br from-black via-slate-950 to-slate-900 backdrop-blur-3xl rounded-3xl shadow-[0_20px_70px_-15px_rgba(0,0,0,0.8)] overflow-hidden border border-white/10 ring-1 ring-black/40">
         
