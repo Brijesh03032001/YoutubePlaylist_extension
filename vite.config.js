@@ -9,6 +9,13 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     emptyOutDir: true,
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: ['log', 'warn'],  // Remove console.log and console.warn in production
+        drop_debugger: true
+      }
+    },
     rollupOptions: {
       input: {
         content: resolve(__dirname, 'src/content/index.jsx'),
