@@ -221,6 +221,11 @@ const PlaylistParser = {
       }
 
       console.log(`[Parser] Extracted ${videos.length} videos`);
+      
+      // Quick sanity check
+      const totalDur = videos.reduce((sum, v) => sum + (v.duration || 0), 0);
+      console.log(`[Parser] Total duration: ${totalDur}s (${(totalDur/3600).toFixed(1)}h, avg: ${videos.length > 0 ? (totalDur/videos.length/60).toFixed(1) : 0}min/video)`);
+      
       return videos;
     } catch (error) {
       console.error('[Parser] Error extracting videos:', error);
@@ -245,22 +250,50 @@ const PlaylistParser = {
       const titleElement = DOMUtils.safeQuery(CONFIG.SELECTORS.VIDEO_TITLE, element);
       const title = DOMUtils.getTextContent(titleElement);
 
-      // Get duration
-      const durationElement = DOMUtils.safeQuery(
-        CONFIG.SELECTORS.VIDEO_DURATION + ' span[aria-label]',
-        element
-      );
-      const durationText = durationElement?.getAttribute('aria-label') || 
-                          DOMUtils.getTextContent(durationElement);
+      // Get duration - extract from the visible timestamp overlay (e.g., "16:08")
+      let durationText = null;
+      
+      // Target the visible timestamp text, NOT aria-labels
+      const timestampSelectors = [
+        'ytd-thumbnail-overlay-time-status-renderer span#text',
+        'ytd-thumbnail-overlay-time-status-renderer #text',
+        '.ytd-thumbnail-overlay-time-status-renderer #text',
+        'span.style-scope.ytd-thumbnail-overlay-time-status-renderer:not([aria-label])'
+      ];
+      
+      for (const selector of timestampSelectors) {
+        const timestampElement = DOMUtils.safeQuery(selector, element);
+        if (timestampElement) {
+          const text = DOMUtils.getTextContent(timestampElement);
+          // Only accept if it looks like a timestamp (contains colon)
+          if (text && text.includes(':')) {
+            durationText = text;
+            break;
+          }
+        }
+      }
       
       let durationSeconds = 0;
-      if (TimeUtils && typeof TimeUtils.parseYouTubeDuration === 'function') {
-        durationSeconds = TimeUtils.parseYouTubeDuration(durationText);
-      } else if (TimeUtils && TimeUtils.default && typeof TimeUtils.default.parseYouTubeDuration === 'function') {
-        // Handle weird CJS/ESM interop if typical default import issue
-        durationSeconds = TimeUtils.default.parseYouTubeDuration(durationText);
+      if (durationText) {
+        if (TimeUtils && typeof TimeUtils.parseYouTubeDuration === 'function') {
+          durationSeconds = TimeUtils.parseYouTubeDuration(durationText);
+        } else if (TimeUtils && TimeUtils.default && typeof TimeUtils.default.parseYouTubeDuration === 'function') {
+          durationSeconds = TimeUtils.default.parseYouTubeDuration(durationText);
+        } else {
+          console.error('[Parser] TimeUtils.parseYouTubeDuration is not a function', TimeUtils);
+        }
       } else {
-        console.error('[Parser] TimeUtils.parseYouTubeDuration is not a function', TimeUtils);
+        console.warn(`[Parser] No duration found for video ${index + 1}: ${title?.substring(0, 40)}`);
+      }
+      
+      // Debug log for first few videos
+      if (index < 3) {
+        console.log(`[Parser] Video ${index + 1} duration:`, {
+          title: title?.substring(0, 40),
+          durationText,
+          durationSeconds,
+          minutes: (durationSeconds / 60).toFixed(1)
+        });
       }
 
       // Check if watched (YouTube marks watched videos)
@@ -275,7 +308,7 @@ const PlaylistParser = {
                            title.toLowerCase().includes('[deleted video]') ||
                            title.toLowerCase().includes('[private video]');
 
-      return {
+      const videoData = {
         id: videoId,
         title: title || `Video ${index + 1}`,
         duration: durationSeconds,
@@ -283,6 +316,8 @@ const PlaylistParser = {
         isWatched,
         isUnavailable
       };
+      
+      return videoData;
     } catch (error) {
       console.error('[Parser] Error extracting video data:', error);
       return null;
@@ -377,7 +412,7 @@ const PlaylistParser = {
       .filter(v => !v.isWatched)
       .reduce((sum, v) => sum + (v.duration || 0), 0);
 
-    return {
+    const stats = {
       totalVideos: videos.length,
       availableVideos: availableVideos.length,
       unavailableCount,
@@ -389,6 +424,19 @@ const PlaylistParser = {
         ? Math.round((watchedCount / availableVideos.length) * 100)
         : 0
     };
+    
+    console.log('[Parser] Statistics calculated:', {
+      totalVideos: stats.totalVideos,
+      availableVideos: stats.availableVideos,
+      unavailableCount: stats.unavailableCount,
+      totalDuration: `${stats.totalDuration}s (${(stats.totalDuration / 3600).toFixed(1)}h)`,
+      remainingDuration: `${stats.remainingDuration}s (${(stats.remainingDuration / 3600).toFixed(1)}h)`,
+      watchedCount: stats.watchedCount,
+      remainingVideos: stats.remainingVideos,
+      percentComplete: `${stats.percentComplete}%`
+    });
+    
+    return stats;
   },
 
   /**
