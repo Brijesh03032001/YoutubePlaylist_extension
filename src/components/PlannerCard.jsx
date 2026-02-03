@@ -8,11 +8,11 @@ import TimeUtils from '../utils/timeUtils';
 import StorageUtils from '../utils/storageUtils';
 
 const SPEEDS = [1, 1.25, 1.5, 1.75, 2];
-const DAILY_MINUTES_PRESETS = [15, 30, 45, 60, 90, 120];
+const DAILY_MINUTES_PRESETS = [60, 120, 150, 180, 210, 240];
 
 const PlannerCard = ({ data, loading, error, onClose }) => {
   const [speed, setSpeed] = useState(1.25);
-  const [dailyMinutes, setDailyMinutes] = useState(30);
+  const [dailyMinutes, setDailyMinutes] = useState(120);
   const [customName, setCustomName] = useState('');
   const [isEditingName, setIsEditingName] = useState(false);
   
