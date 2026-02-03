@@ -38,16 +38,65 @@ const PlannerCard = ({ data, loading, error, onClose }) => {
   };
 
   const stats = useMemo(() => {
-    if (!data?.statistics) return null;
+    if (!data?.statistics) {
+      console.log('[PlannerCard] No statistics data available');
+      return null;
+    }
+    
     const { remainingDuration, watchedCount, totalVideos } = data.statistics;
     
+    // Validate input values
+    if (typeof remainingDuration !== 'number' || remainingDuration < 0) {
+      console.error('[PlannerCard] Invalid remainingDuration:', remainingDuration);
+      return null;
+    }
+    
+    if (!dailyMinutes || dailyMinutes <= 0) {
+      console.error('[PlannerCard] Invalid dailyMinutes:', dailyMinutes);
+      return null;
+    }
+    
+    if (!speed || speed <= 0) {
+      console.error('[PlannerCard] Invalid speed:', speed);
+      return null;
+    }
+    
+    // Calculate adjusted remaining time (in seconds)
     const adjustedRemaining = Math.ceil(remainingDuration / speed);
-    const daysToFinish = Math.ceil((adjustedRemaining / 60) / dailyMinutes);
+    
+    // Convert to minutes, then calculate days
+    const adjustedMinutes = adjustedRemaining / 60;
+    const daysToFinish = Math.ceil(adjustedMinutes / dailyMinutes);
+    
+    // Validate calculation results
+    if (!isFinite(daysToFinish) || isNaN(daysToFinish)) {
+      console.error('[PlannerCard] Invalid daysToFinish calculation:', {
+        remainingDuration,
+        speed,
+        adjustedRemaining,
+        adjustedMinutes,
+        dailyMinutes,
+        daysToFinish
+      });
+      return null;
+    }
+    
     const completionDate = TimeUtils.calculateCompletionDate(daysToFinish);
     
     const percentComplete = totalVideos > 0 
         ? Math.round((watchedCount / totalVideos) * 100) 
         : 0;
+
+    console.log('[PlannerCard] Calculated stats:', {
+      remainingDuration: `${remainingDuration}s (${(remainingDuration / 3600).toFixed(1)}h)`,
+      speed: `${speed}x`,
+      adjustedRemaining: `${adjustedRemaining}s (${(adjustedRemaining / 3600).toFixed(1)}h)`,
+      dailyMinutes: `${dailyMinutes}min`,
+      daysToFinish,
+      percentComplete: `${percentComplete}%`,
+      watchedCount,
+      totalVideos
+    });
 
     return { adjustedRemaining, daysToFinish, completionDate, percentComplete, watchedCount, totalVideos };
   }, [data, speed, dailyMinutes]);
@@ -204,13 +253,13 @@ const PlannerCard = ({ data, loading, error, onClose }) => {
                </div>
                <div className="flex items-baseline gap-3 mb-2">
                   <span className="text-5xl font-black bg-gradient-to-r from-white via-yellow-200 to-yellow-300 bg-clip-text text-transparent tracking-tight">
-                    {Math.abs(stats.daysToFinish) === Infinity ? '∞' : stats.daysToFinish}
+                    {!isFinite(stats.daysToFinish) || isNaN(stats.daysToFinish) ? '∞' : stats.daysToFinish}
                   </span>
                   <span className="text-lg font-bold text-slate-400">days</span>
                </div>
                <div className="flex items-center gap-2 text-sm font-semibold text-slate-400">
                   <div className="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></div>
-                  <span>{TimeUtils.formatDate(stats.completionDate)}</span>
+                  <span>{stats.completionDate ? TimeUtils.formatDate(stats.completionDate) : 'Set a daily goal'}</span>
                </div>
              </div>
           </motion.div>
