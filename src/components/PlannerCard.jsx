@@ -270,9 +270,9 @@ const PlannerCard = ({ data, loading, error, onClose }) => {
              <div>
                 <div className="flex items-center gap-2.5 mb-3">
                    <div className="p-1.5 bg-yellow-500/10 rounded-lg">
-                     <FastForward size={14} className="text-yellow-400" />
+                     <FastForward size={16} className="text-yellow-400" />
                    </div>
-                   <span className="text-xs font-black text-slate-300 uppercase tracking-wider">Playback Speed</span>
+                   <span className="text-sm font-black text-white uppercase tracking-wider">Playback Speed</span>
                 </div>
                 <div className="flex gap-2 p-2 bg-slate-900/50 rounded-xl border border-white/5">
                    {SPEEDS.map(s => (
@@ -281,10 +281,10 @@ const PlannerCard = ({ data, loading, error, onClose }) => {
                        onClick={() => setSpeed(s)}
                        whileTap={{ scale: 0.92 }}
                        whileHover={{ scale: 1.05 }}
-                       className={`flex-1 py-2.5 rounded-lg text-sm font-black transition-all ${
+                       className={`flex-1 py-3 rounded-lg text-base font-black transition-all ${
                          speed === s 
                            ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-black shadow-lg shadow-yellow-500/30 scale-105' 
-                           : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
+                           : 'text-slate-400 hover:text-white hover:bg-white/5'
                        }`}
                      >
                        {s}x
@@ -297,10 +297,10 @@ const PlannerCard = ({ data, loading, error, onClose }) => {
              <div>
                 <div className="flex items-center gap-2.5 mb-3">
                    <div className="p-1.5 bg-yellow-500/10 rounded-lg">
-                     <Clock size={14} className="text-yellow-400" />
+                     <Clock size={16} className="text-yellow-400" />
                    </div>
-                   <span className="text-xs font-black text-slate-300 uppercase tracking-wider">Daily Goal</span>
-                   <span className="ml-auto text-xs font-bold text-yellow-400 bg-yellow-500/10 px-2.5 py-1 rounded-full">{dailyMinutes}m</span>
+                   <span className="text-sm font-black text-white uppercase tracking-wider">Daily Goal</span>
+                   <span className="ml-auto text-sm font-bold text-yellow-400 bg-yellow-500/10 px-3 py-1.5 rounded-full">{dailyMinutes}m</span>
                 </div>
                 <div className="grid grid-cols-6 gap-2 mb-3">
                    {DAILY_MINUTES_PRESETS.map(m => (
@@ -309,10 +309,10 @@ const PlannerCard = ({ data, loading, error, onClose }) => {
                        onClick={() => setDailyMinutes(m)}
                        whileTap={{ scale: 0.9 }}
                        whileHover={{ scale: 1.05 }}
-                       className={`py-2 rounded-xl text-xs font-bold transition-all border ${
+                       className={`py-2.5 rounded-xl text-sm font-bold transition-all border ${
                          dailyMinutes === m
                            ? 'bg-gradient-to-r from-yellow-500 to-yellow-600 text-black border-transparent shadow-lg shadow-yellow-500/30'
-                           : 'bg-slate-900/50 text-slate-500 border-white/5 hover:border-yellow-500/30 hover:text-slate-300'
+                           : 'bg-slate-900/50 text-slate-400 border-white/5 hover:border-yellow-500/30 hover:text-white'
                        }`}
                      >
                        {m}
